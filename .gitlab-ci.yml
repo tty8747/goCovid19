@@ -1,0 +1,88 @@
+stages:
+  - validate
+  - build
+  - deploy
+
+
+variables:
+  AWS_ACCESS_KEY_ID: ${TF_VAR_aws_access_key_id}
+  AWS_SECRET_ACCESS_KEY: ${TF_VAR_aws_secret_access_key}
+  TF_VAR_cloudflare_api_key: $TF_VAR_cloudflare_api_key
+  TF_VAR_cloudflare_email: $TF_VAR_cloudflare_email
+  region: eu-central-1
+  VALIDATE: "no"
+  PHASE: "apply"
+
+
+terraform validate:
+  stage: validate
+  image:
+    name: hashicorp/terraform:1.1.7
+    entrypoint: [""]
+  before_script:
+    - cd k8s
+    - terraform init -input=false -backend=false
+  script:
+    - terraform validate
+  only:
+    variables:
+      - $VALIDATE == "yes"
+
+
+terraform build:
+  stage: build
+  image:
+    name: hashicorp/terraform:1.1.7
+    entrypoint: [""]
+  before_script:
+    - cd k8s
+    - terraform init -input=false -backend=false
+  script:
+    - terraform plan -target module.vpc -input=false -out=plan.bin
+  artifacts:
+    name: plan
+    paths:
+      - k8s/plan.bin
+  only:
+    variables:
+      - $PHASE == "apply"
+
+
+terraform apply:
+  stage: deploy
+  image:
+    name: hashicorp/terraform:1.1.7
+    entrypoint: [""]
+  before_script:
+    - cd k8s
+    - terraform init -input=false -backend=false
+  script:
+    - terraform apply -input=false -auto-approve plan.bin
+  after_script:
+    - ls k8s
+  only:
+    variables:
+      - $PHASE == "apply"
+  when: manual
+  environment:
+    name: my-environment/${CI_COMMIT_REF_SLUG}
+
+
+terraform destroy:
+  stage: deploy
+  image:
+    name: hashicorp/terraform:1.1.7
+    entrypoint: [""]
+  before_script:
+    - cd k8s
+    - terraform init
+    - ls
+  script:
+    - terraform destroy -input=false -auto-approve
+  only:
+    variables:
+      - $PHASE == "destroy"
+  when: manual
+  environment:
+    name: my-environment/${CI_COMMIT_REF_SLUG}
+    action: stop
