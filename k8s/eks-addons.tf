@@ -17,7 +17,7 @@ resource "null_resource" "policy" {
   provisioner "local-exec" {
     on_failure  = fail
     when        = create
-    interpreter = ["/bin/bash", "-c"]
+    interpreter = ["/usr/bin/env", "sh", "-c"]
     command     = <<EOT
             curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
      EOT
