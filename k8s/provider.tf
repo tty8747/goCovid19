@@ -1,4 +1,5 @@
 terraform {
+  backend "http" {}
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -24,14 +25,9 @@ terraform {
       source  = "gavinbunney/kubectl"
       version = "1.13.1"
     }
-    #   template = {
-    #     source  = "hashicorp/template"
-    #     version = "2.2.0"
-    #   }
   }
 }
 
-# provider "template" {}
 
 provider "kubectl" {
   host                   = aws_eks_cluster.ek8s.endpoint
@@ -57,7 +53,6 @@ provider "aws" {
 provider "null" {}
 
 provider "kubernetes" {
-  # aws eks update-kubeconfig --region eu-central-1 --name eks-myk8s-4Mqb
   # config_path    = "~/.kube/config"
   # config_context = "arn:aws:eks:${data.aws_region.current.id}:${data.aws_caller_identity.current.id}:cluster/${aws_eks_cluster.ek8s.name}"
 
