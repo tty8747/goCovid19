@@ -49,8 +49,8 @@ terraform validate:
 .base terraform build:
   stage: build
   script:
-    - gitlab-terraform plan -target module.vpc
-    - gitlab-terraform plan-json -target module.vpc
+    - gitlab-terraform plan
+    - gitlab-terraform plan-json
   only:
     variables:
       - $PHASE == "apply"
