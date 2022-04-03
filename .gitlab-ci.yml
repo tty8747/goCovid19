@@ -1,14 +1,14 @@
 image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
 
+# https://docs.gitlab.com/ee/user/infrastructure/iac/terraform_state.html#configure-the-backend
 variables:
   TF_ROOT: ${CI_PROJECT_DIR}/k8s
-  TF_STATE_NAME: ${CI_COMMIT_BRANCH}
   TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/${TF_STATE_NAME}
+  TF_STATE_NAME: ${CI_COMMIT_BRANCH}
   AWS_ACCESS_KEY_ID: ${TF_VAR_aws_access_key_id}
   AWS_SECRET_ACCESS_KEY: ${TF_VAR_aws_secret_access_key}
   TF_VAR_cloudflare_api_key: ${TF_VAR_cloudflare_api_key}
   TF_VAR_cloudflare_email: ${TF_VAR_cloudflare_email}
-  TF_VAR_k8s_name: k8s-${CI_COMMIT_BRANCH}
   VALIDATE: "yes"
   PHASE: "apply"
 
@@ -28,7 +28,6 @@ before_script:
   - cd ${TF_ROOT}
   - echo ${TF_ADDRESS}
 
-# https://docs.gitlab.com/ee/user/infrastructure/iac/terraform_state.html#configure-the-backend
 .terraform-init: &terraform-init
   - gitlab-terraform init
 
@@ -45,43 +44,109 @@ terraform validate:
     variables:
       - $VALIDATE == "yes"
 
-terraform build:
+
+
+.base terraform build:
   stage: build
   script:
-    - gitlab-terraform plan
-    - gitlab-terraform plan-json
+    - gitlab-terraform plan -target module.vpc
+    - gitlab-terraform plan-json -target module.vpc
+  only:
+    variables:
+      - $PHASE == "apply"
   artifacts:
     name: plan
     paths:
       - ${TF_ROOT}/plan.cache
     reports:
       terraform: ${TF_ROOT}/plan.json
-  only:
-    variables:
-      - $PHASE == "apply"
-  environment:
-    name: ${CI_COMMIT_BRANCH}
 
-terraform apply:
+dev terraform build:
+  extends: .base terraform build
+  variables:
+    TF_VAR_k8s_name: "dev"
+    TF_STATE_NAME: "dev"
+  only:
+    - develop
+    - terraform-ci
+
+prod terraform build:
+  extends: .base terraform build
+  variables:
+    TF_VAR_k8s_name: "prod"
+    TF_STATE_NAME: "prod"
+  only:
+    - main
+    - terraform-ci
+
+
+
+.base terraform apply:
   stage: apply
+# when: manual
   script:
     - gitlab-terraform apply
   only:
     variables:
       - $PHASE == "apply"
-  dependencies:
-    - terraform build
-  when: manual
-  environment:
-    name: ${CI_COMMIT_BRANCH}
 
-terraform destroy:
+dev terraform apply:
+  extends: .base terraform apply
+  environment:
+    name: dev
+    auto_stop_in: 1 week
+    on_stop: dev terraform destroy
+  only:
+    - develop
+    - terraform-ci
+  variables:
+    TF_STATE_NAME: "dev"
+  dependencies:
+    - dev terraform build
+
+prod terraform apply:
+  extends: .base terraform apply
+  environment:
+    name: prod
+    auto_stop_in: 4 week
+    on_stop: prod terraform destroy
+  only:
+    - main
+    - terraform-ci
+  variables:
+    TF_STATE_NAME: "prod"
+  dependencies:
+    - prod terraform build
+
+
+
+.base terraform destroy:
   stage: destroy
+  when: manual
   script:
     - gitlab-terraform destroy
   only:
     variables:
       - $PHASE == "apply"
-  when: manual
+
+dev terraform destroy:
+  extends: .base terraform destroy
   environment:
-    name: ${CI_COMMIT_BRANCH}
+    name: dev
+    action: stop
+  variables:
+    TF_STATE_NAME: "dev"
+  only:
+    - develop
+    - terraform-ci
+
+prod terraform destroy:
+  extends: .base terraform destroy
+  environment:
+    name: prod
+    action: stop
+  variables:
+    TF_STATE_NAME: "prod"
+  only:
+    - main
+    - terraform-ci
