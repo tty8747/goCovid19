@@ -10,7 +10,7 @@ variables:
   TF_VAR_cloudflare_api_key: ${TF_VAR_cloudflare_api_key}
   TF_VAR_cloudflare_email: ${TF_VAR_cloudflare_email}
   VALIDATE: "yes"
-  PHASE: "destroy"
+  PHASE: "apply"
 
 cache:
   key: ${CI_COMMIT_BRANCH}-cache
@@ -66,6 +66,7 @@ dev terraform build:
   variables:
     TF_VAR_k8s_name: "dev"
     TF_STATE_NAME: "dev"
+    TF_VAR_cname_record: test.app
   only:
     - develop
     - terraform-ci
@@ -75,6 +76,7 @@ prod terraform build:
   variables:
     TF_VAR_k8s_name: "prod"
     TF_STATE_NAME: "prod"
+    TF_VAR_cname_record: app
   only:
     - main
     - terraform-ci
@@ -101,7 +103,6 @@ dev terraform apply:
     - terraform-ci
   variables:
     TF_STATE_NAME: "dev"
-    TF_VAR_cname_record: test.app
   dependencies:
     - dev terraform build
 
@@ -116,7 +117,6 @@ prod terraform apply:
     - terraform-ci
   variables:
     TF_STATE_NAME: "prod"
-    TF_VAR_cname_record: app
   dependencies:
     - prod terraform build
 
