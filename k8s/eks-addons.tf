@@ -26,7 +26,7 @@ resource "null_resource" "policy" {
 
 resource "aws_iam_policy" "ek8s-AWSLoadBalancerControllerIAMPolicy" {
   depends_on  = [null_resource.policy]
-  name        = "AWSLoadBalancerControllerIAMPolicy"
+  name        = "${local.cluster_name}-AWSLoadBalancerControllerIAMPolicy"
   path        = "/"
   description = "AWS LoadBalancer Controller IAM Policy"
 
