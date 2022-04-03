@@ -10,7 +10,7 @@ variables:
   TF_VAR_cloudflare_api_key: ${TF_VAR_cloudflare_api_key}
   TF_VAR_cloudflare_email: ${TF_VAR_cloudflare_email}
   VALIDATE: "yes"
-  PHASE: "apply"
+  PHASE: "destroy"
 
 cache:
   key: ${CI_COMMIT_BRANCH}-cache
@@ -83,7 +83,7 @@ prod terraform build:
 
 .base terraform apply:
   stage: apply
-# when: manual
+  when: manual
   script:
     - gitlab-terraform apply
   only:
@@ -101,6 +101,7 @@ dev terraform apply:
     - terraform-ci
   variables:
     TF_STATE_NAME: "dev"
+    TF_VAR_cname_record: test.app
   dependencies:
     - dev terraform build
 
@@ -115,6 +116,7 @@ prod terraform apply:
     - terraform-ci
   variables:
     TF_STATE_NAME: "prod"
+    TF_VAR_cname_record: app
   dependencies:
     - prod terraform build
 
@@ -127,7 +129,7 @@ prod terraform apply:
     - gitlab-terraform destroy
   only:
     variables:
-      - $PHASE == "apply"
+      - $PHASE == "destroy"
 
 dev terraform destroy:
   extends: .base terraform destroy
