@@ -61,13 +61,24 @@ variable "cloudflare_api_key" {
   type = string
 }
 
-variable "db_set" {
-  type = map(string)
-  default = {
-    "dbname" = "test"
-    "dbuser" = "someuser"
-    "dbpass" = "somepass"
-  }
+variable "db_name" {
+  type    = string
+  default = "test"
+}
+
+variable "db_user" {
+  type    = string
+  default = "someuser"
+}
+
+variable "db_pass" {
+  type    = string
+  default = "somepass"
+}
+
+variable "db_environment" {
+  type    = string
+  default = "dev"
 }
 
 variable "environments" {
@@ -78,4 +89,9 @@ variable "environments" {
 variable "app_name" {
   type    = string
   default = "gocovid"
+}
+
+variable "enable_ecr" {
+  type    = bool
+  default = false
 }

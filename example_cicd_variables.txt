@@ -1,0 +1,78 @@
+# Shared variables
+# Type: File
+'{"variable_type":"file","key":"TFLINT_CONF","value":'plugin "aws" {\n  enabled = true\n  version = "0.13.2"\n  source  = "github.com/terraform-linters/tflint-ruleset-aws"\n}',"protected":false,"masked":false,"environment_scope":"*"}'
+# Content:
+plugin "aws" {
+  enabled = true
+  version = "0.13.2"
+  source  = "github.com/terraform-linters/tflint-ruleset-aws"
+}
+
+declare -a vars=(
+'{"variable_type":"env_var","key":"TF_VAR_aws_access_key_id","value":"xxxx","protected":false,"masked":true,"environment_scope":"*"}'
+'{"variable_type":"env_var","key":"TF_VAR_aws_secret_access_key","value":"xxxx","protected":false,"masked":true,"environment_scope":"*"}'
+'{"variable_type":"env_var","key":"TF_VAR_cloudflare_api_key","value":"xxxx","protected":false,"masked":true,"environment_scope":"*"}'
+'{"variable_type":"env_var","key":"TF_VAR_cloudflare_email","value":"xxxx","protected":false,"masked":true,"environment_scope":"*"}'
+)
+
+GITLAB_ACCESS_TOKEN=xxxxxxxx
+
+for i in "${vars[@]}"
+do
+   curl --request POST --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
+     --header "Content-Type: application/json" \
+     --data "$i" \
+     "https://gitlab.ubukubu.ru/api/v4/projects/38/variables"
+   printf "\n"
+done
+
+# TEST environment:
+declare -a test=(
+'{"variable_type":"env_var","key":"TERRAFORM_STATE_TEST","value":"test","protected":false,"masked":false,"environment_scope":"test"}'
+'{"variable_type":"env_var","key":"K8S_NAME_TEST","value":"test","protected":false,"masked":false,"environment_scope":"test"}'
+'{"variable_type":"env_var","key":"CNAME_RECORD_TEST","value":"test.app","protected":false,"masked":false,"environment_scope":"test"}'
+'{"variable_type":"env_var","key":"DB_NAME_TEST","value":"gocovid","protected":false,"masked":false,"environment_scope":"test"}'
+'{"variable_type":"env_var","key":"DB_USER_TEST","value":"testuser","protected":false,"masked":false,"environment_scope":"test"}'
+'{"variable_type":"env_var","key":"DB_PASS_TEST","value":"yourstrongpassword","protected":false,"masked":true,"environment_scope":"test"}'
+'{"variable_type":"env_var","key":"DB_ENVIRONMENT_TEST","value":"test","protected":false,"masked":false,"environment_scope":"test"}'
+'{"variable_type":"env_var","key":"DOMAIN_NAME_TEST","value":"ubukubu.ru","protected":false,"masked":false,"environment_scope":"test"}'
+'{"variable_type":"env_var","key":"AWS_REGION_TEST","value":"eu-central-1","protected":false,"masked":false,"environment_scope":"test"}'
+'{"variable_type":"env_var","key":"ENABLE_ECR_BOOL_TEST","value":"false","protected":false,"masked":false,"environment_scope":"test"}'
+)
+
+GITLAB_ACCESS_TOKEN=xxxxxxxx
+
+for i in "${test[@]}"
+do
+   curl --request POST --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
+     --header "Content-Type: application/json" \
+     --data "$i" \
+     "https://gitlab.ubukubu.ru/api/v4/projects/38/variables"
+   printf "\n"
+done
+
+# PROD environment:
+declare -a prod=(
+'{"variable_type":"env_var","key":"TERRAFORM_STATE_PROD","value":"prod","protected":false,"masked":false,"environment_scope":"prod"}'
+'{"variable_type":"env_var","key":"K8S_NAME_PROD","value":"prod","protected":false,"masked":false,"environment_scope":"prod"}'
+'{"variable_type":"env_var","key":"CNAME_RECORD_PROD","value":"app","protected":false,"masked":false,"environment_scope":"prod"}'
+'{"variable_type":"env_var","key":"DB_NAME_PROD","value":"gocovid","protected":false,"masked":false,"environment_scope":"prod"}'
+'{"variable_type":"env_var","key":"DB_USER_PROD","value":"produser","protected":false,"masked":false,"environment_scope":"prod"}'
+'{"variable_type":"env_var","key":"DB_PASS_PROD","value":"yourstrongpassword","protected":false,"masked":true,"environment_scope":"prod"}'
+'{"variable_type":"env_var","key":"DB_ENVIRONMENT_PROD","value":"prod","protected":false,"masked":false,"environment_scope":"prod"}'
+'{"variable_type":"env_var","key":"DOMAIN_NAME_PROD","value":"ubukubu.ru","protected":false,"masked":false,"environment_scope":"prod"}'
+'{"variable_type":"env_var","key":"AWS_REGION_PROD","value":"eu-central-1","protected":false,"masked":false,"environment_scope":"prod"}'
+'{"variable_type":"env_var","key":"ENABLE_ECR_BOOL_PROD","value":"true","protected":false,"masked":false,"environment_scope":"prod"}'
+)
+
+GITLAB_ACCESS_TOKEN=xxxxxxxx
+
+for i in "${prod[@]}"
+do
+   curl --request POST --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
+     --header "Content-Type: application/json" \
+     --data "$i" \
+     "https://gitlab.ubukubu.ru/api/v4/projects/38/variables"
+   printf "\n"
+done
+

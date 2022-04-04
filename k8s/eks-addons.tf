@@ -62,21 +62,6 @@ resource "aws_iam_role_policy_attachment" "ek8s-AWSLoadBalancerControllerIAMPoli
   role       = aws_iam_role.ek8s-AmazonEKSLoadBalancerControllerRole.name
 }
 
-resource "kubernetes_service_account" "aws_load_balancer_controller" {
-  metadata {
-    name      = "aws-load-balancer-controller"
-    namespace = "kube-system"
-    labels = {
-      "app.kubernetes.io/component" = "controller"
-      "app.kubernetes.io/name"      = "aws-load-balancer-controller"
-    }
-    annotations = {
-      "eks.amazonaws.com/role-arn"               = aws_iam_role.ek8s-AmazonEKSLoadBalancerControllerRole.arn
-      "eks.amazonaws.com/sts-regional-endpoints" = "true"
-    }
-  }
-}
-
 # Addons
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name      = aws_eks_cluster.ek8s.name
@@ -99,60 +84,3 @@ resource "aws_eks_addon" "kube-proxy" {
   addon_name        = "kube-proxy"
   resolve_conflicts = "OVERWRITE"
 }
-
-# Amazon load balancer controller
-resource "helm_release" "aws-load-balancer-controller" {
-  count = length(local.aws_lbc)
-  name  = "aws-load-balancer-controller"
-
-  repository = "https://aws.github.io/eks-charts"
-  chart      = local.aws_lbc[count.index]
-  namespace  = "kube-system"
-
-  set {
-    name  = "clusterName"
-    value = aws_eks_cluster.ek8s.name
-  }
-
-  set {
-    name  = "serviceAccount.create"
-    value = "false"
-  }
-
-  set {
-    name  = "serviceAccount.name"
-    value = kubernetes_service_account.aws_load_balancer_controller.metadata[0].name
-  }
-}
-
-# NGINX Ingress as a variant
-# https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/
-# https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/ingress/annotations/
-# https://aws.amazon.com/blogs/opensource/network-load-balancer-nginx-ingress-controller-eks/
-# resource "helm_release" "nginx_ingress" {
-#   name      = "nginx-ingress"
-#   namespace = "kube-system"
-#
-#   repository = "https://helm.nginx.com/stable"
-#   chart      = "nginx-ingress"
-#
-#   set {
-#     name  = "kubernetes.io/ingress.class"
-#     value = "alb"
-#   }
-#
-#   set {
-#     name  = "alb.ingress.kubernetes.io/ip-address-type"
-#     value = "ipv4"
-#   }
-#
-#   set {
-#     name  = "alb.ingress.kubernetes.io/scheme"
-#     value = "internet-facing"
-#   }
-#
-#   set {
-#     name  = "alb.ingress.kubernetes.io/target-type"
-#     value = "ip"
-#   }
-# }

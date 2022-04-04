@@ -52,22 +52,3 @@ resource "aws_iam_role_policy_attachment" "ek8s-AmazonEKSClusterAutoscalerPolicy
   policy_arn = aws_iam_policy.ek8s-AmazonEKSClusterAutoscalerPolicy.arn
   role       = aws_iam_role.ek8s-AmazonEKSClusterAutoscalerRole.name
 }
-
-# https://www.reddit.com/r/aws/comments/gzkzph/eksterraform_how_to_setup_aws_autoscaling_policy/
-data "kubectl_file_documents" "autoscaling_yaml" {
-  content = templatefile("${path.module}/cluster-autoscaler-autodiscover.yml.tftpl",
-    {
-      account_id                         = data.aws_caller_identity.current.account_id
-      cluster_name                       = local.cluster_name
-      amazon_eks_cluster_autoscaler_role = "${local.cluster_name}-AmazonEKSClusterAutoscalerRole"
-    }
-  )
-}
-
-# https://docs.aws.amazon.com/eks/latest/userguide/autoscaling.html
-resource "kubectl_manifest" "autoscaling_yaml" {
-  # Set 6 to avoid this error: The "for_each" value depends on resource attributes that cannot be determined until apply, so Terraform cannot predict how many instances will be created.
-  count = 6
-  # count     = length(data.kubectl_file_documents.autoscaling_yaml.documents)
-  yaml_body = element(data.kubectl_file_documents.autoscaling_yaml.documents, count.index)
-}

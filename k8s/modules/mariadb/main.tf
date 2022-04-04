@@ -12,20 +12,25 @@ resource "aws_db_instance" "this" {
   availability_zone      = var.av_zone
   vpc_security_group_ids = [aws_security_group.this.id]
   db_subnet_group_name   = aws_db_subnet_group.this.id
+  identifier_prefix      = "${var.db_name}-${var.environment}-"
 
+  tags = {
+    Name        = var.db_name
+    Environment = var.environment
+  }
 }
 
 resource "aws_db_subnet_group" "this" {
-  name       = "this"
+  name       = "${var.db_name}-this-${var.environment}"
   subnet_ids = var.db_subnet_list
 
   tags = {
-    Name = "Subnet group for db instance: ${var.db_name}"
+    Name = "Subnet group for db instance: ${var.db_name}-${var.environment}"
   }
 }
 
 resource "aws_security_group" "this" {
-  name_prefix = "this"
+  name_prefix = "${var.db_name}-${var.environment}-"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -34,5 +39,10 @@ resource "aws_security_group" "this" {
     protocol  = "tcp"
 
     cidr_blocks = var.available_from_subnets
+  }
+
+  tags = {
+    Name        = "${var.db_name}-${var.environment}"
+    Environment = var.environment
   }
 }
