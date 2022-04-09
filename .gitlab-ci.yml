@@ -9,7 +9,7 @@ variables:
   AWS_SECRET_ACCESS_KEY: ${TF_VAR_aws_secret_access_key}
   TF_VAR_cloudflare_api_key: ${TF_VAR_cloudflare_api_key}
   TF_VAR_cloudflare_email: ${TF_VAR_cloudflare_email}
-  PHASE: "apply"
+  PHASE: "destroy"
   TF_ENV_TEST: test
   TF_ENV_PROD: prod
 
