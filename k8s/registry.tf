@@ -6,7 +6,7 @@ provider "aws" {
 }
 
 locals {
-  repo_name = ["front-${var.app_name}", "back-${var.app_name}"]
+  repo_name = ["front-${var.app_name}", "back-${var.app_name}", "goose-${var.app_name}"]
 }
 
 resource "aws_ecrpublic_repository" "goCovid" {
