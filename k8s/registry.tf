@@ -6,12 +6,12 @@ provider "aws" {
 }
 
 locals {
+  count     = var.enable_ecr ? 1 : 0
   repo_name = ["front-${var.app_name}", "back-${var.app_name}", "goose-${var.app_name}"]
 }
 
 resource "aws_ecrpublic_repository" "goCovid" {
-
-  count           = length(local.repo_name)
+  count           = var.enable_ecr ? length(local.repo_name) : 0
   provider        = aws.ireland
   repository_name = local.repo_name[count.index]
 
@@ -26,7 +26,7 @@ resource "aws_ecrpublic_repository" "goCovid" {
 }
 
 resource "aws_ecrpublic_repository_policy" "goCovid" {
-  count           = length(local.repo_name)
+  count           = var.enable_ecr ? length(local.repo_name) : 0
   provider        = aws.ireland
   repository_name = aws_ecrpublic_repository.goCovid[count.index].repository_name
 
@@ -61,7 +61,7 @@ EOF
 }
 
 data "aws_ecr_authorization_token" "token" {
-  count       = length(local.repo_name)
+  count       = var.enable_ecr ? length(local.repo_name) : 0
   registry_id = aws_ecrpublic_repository.goCovid[count.index].registry_id
 }
 

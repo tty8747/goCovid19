@@ -10,3 +10,4 @@ variable "available_from_subnets" {
   description = "It is a list of subnets where database is available"
 }
 variable "vpc_id" {}
+variable "environment" {}
