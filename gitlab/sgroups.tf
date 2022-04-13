@@ -9,10 +9,11 @@ resource "aws_security_group" "gitlab" {
 }
 
 resource "aws_security_group_rule" "ingress_all" {
+  count             = length(var.opened_ports)
   type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
+  from_port         = var.opened_ports[count.index]
+  to_port           = var.opened_ports[count.index]
+  protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.gitlab.id
 }

@@ -31,3 +31,8 @@ variable "subnet_zone" {
   type    = string
   default = "eu-central-1a"
 }
+
+variable "opened_ports" {
+  type    = list(string)
+  default = ["22", "443", "80", "8822"]
+}
