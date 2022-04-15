@@ -108,8 +108,15 @@ terraform init:
   stage: init
   before_script:
     *before-k8s
+# environment:
+#   name: ${TF_ENV_TEST}
+#   url: ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
   script:
+#   - env
+#   - echo ${DOMAIN_NAME_TEST}
     - gitlab-terraform init
+# variables:
+#   *test-variables
 
 terraform validate:
   stage: validate
@@ -147,6 +154,7 @@ tflint:
   before_script:
     *before-k8s
   script:
+    - echo ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
     - gitlab-terraform plan
     - gitlab-terraform plan-json
   artifacts:
@@ -165,9 +173,10 @@ test terraform build:
     *test-variables
   environment:
     name: ${TF_ENV_TEST}
-    url: ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
-    auto_stop_in: 1 week
-    on_stop: test terraform destroy
+    # url: ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
+    url: test1.app2.ru
+  # auto_stop_in: 1 week
+  # on_stop: test terraform destroy
   only:
     - develop
     - terraform-ci
@@ -179,8 +188,8 @@ prod terraform build:
   environment:
     name: ${TF_ENV_PROD}
     url: ${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
-    auto_stop_in: 4 week
-    on_stop: prod terraform destroy
+  # auto_stop_in: 4 week
+  # on_stop: prod terraform destroy
   only:
     - terraform-ci
 
@@ -198,8 +207,8 @@ test terraform apply:
   environment:
     name: ${TF_ENV_TEST}
     url: ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
-    auto_stop_in: 1 week
-    on_stop: test terraform destroy
+  # auto_stop_in: 1 week
+  # on_stop: test terraform destroy
   only:
     - develop
     - terraform-ci
@@ -215,8 +224,8 @@ prod terraform apply:
   environment:
     name: ${TF_ENV_PROD}
     url: ${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
-    auto_stop_in: 4 week
-    on_stop: prod terraform destroy
+  # auto_stop_in: 4 week
+  # on_stop: prod terraform destroy
   only:
     - terraform-ci
   variables:
@@ -286,8 +295,8 @@ extra test terraform build:
   environment:
     name: ${TF_ENV_TEST}
     url: ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
-    auto_stop_in: 1 week
-    on_stop: extra test terraform destroy
+  # auto_stop_in: 1 week
+  # on_stop: extra test terraform destroy
   only:
     - develop
     - terraform-ci
@@ -303,8 +312,8 @@ extra prod terraform build:
   environment:
     name: ${TF_ENV_PROD}
     url: ${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
-    auto_stop_in: 4 week
-    on_stop: extra prod terraform destroy
+  # auto_stop_in: 4 week
+  # on_stop: extra prod terraform destroy
   only:
     - terraform-ci
   needs:
@@ -329,8 +338,8 @@ extra test terraform apply:
   environment:
     name: ${TF_ENV_TEST}
     url: ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
-    auto_stop_in: 1 week
-    on_stop: extra test terraform destroy
+  # auto_stop_in: 1 week
+  # on_stop: extra test terraform destroy
   only:
     - develop
     - terraform-ci
@@ -346,8 +355,8 @@ extra prod terraform apply:
   environment:
     name: ${TF_ENV_PROD}
     url: ${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
-    auto_stop_in: 4 week
-    on_stop: extra prod terraform destroy
+  # auto_stop_in: 4 week
+  # on_stop: extra prod terraform destroy
   only:
     - terraform-ci
   variables:
@@ -370,7 +379,7 @@ extra test terraform destroy:
   environment:
     name: ${TF_ENV_TEST}
     url: ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
-    action: stop
+  # action: stop
   variables:
     *test-variables-extra
   rules:
@@ -384,7 +393,7 @@ extra prod terraform destroy:
   environment:
     name: ${TF_ENV_PROD}
     url: ${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
-    action: stop
+  # action: stop
   variables:
     *prod-variables-extra
   rules:
@@ -407,7 +416,7 @@ test terraform destroy:
   environment:
     name: ${TF_ENV_TEST}
     url: ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
-    action: stop
+  # action: stop
   variables:
     *test-variables
   rules:
@@ -421,7 +430,7 @@ prod terraform destroy:
   environment:
     name: ${TF_ENV_PROD}
     url: ${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
-    action: stop
+  # action: stop
   variables:
     *prod-variables
   rules:
