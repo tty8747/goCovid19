@@ -9,7 +9,7 @@ resource "aws_lb" "ek8s" {
   tags = {
     Name                       = "alb-${local.cluster_name}"
     "ingress.k8s.aws/resource" = "LoadBalancer"
-  # "ingress.k8s.aws/stack"    = "game-2048/ingress-2048"
+    "ingress.k8s.aws/stack"    = var.k8s_ingress
     "elbv2.k8s.aws/cluster"    = local.cluster_name
   }
 

@@ -95,3 +95,9 @@ variable "enable_ecr" {
   type    = bool
   default = false
 }
+
+variable "k8s_ingress" {
+  type        = string
+  description = "Kubernetes namespace and ingress name to connect ingress with alb"
+  default     = "gocovid/ingress-gocovid"
+}

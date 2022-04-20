@@ -8,9 +8,9 @@ resource "random_string" "suffix" {
 locals {
   cluster_name   = "eks-${var.k8s_name}-${random_string.suffix.result}"
   eks_node_group = "${local.cluster_name}-node-group"
-# aws_lbc        = ["aws-load-balancer-controller"]
-  fqdn           = join(".", [var.cname_record, var.domain])
-  kubeconfig     = <<KUBECONFIG
+  # aws_lbc        = ["aws-load-balancer-controller"]
+  fqdn       = join(".", [var.cname_record, var.domain])
+  kubeconfig = <<KUBECONFIG
 
 
 apiVersion: v1
