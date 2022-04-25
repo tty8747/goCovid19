@@ -73,7 +73,7 @@ resource "aws_eks_node_group" "ek8s-front" {
   cluster_name    = aws_eks_cluster.ek8s.name
   node_group_name = "${local.eks_node_group}-front"
   node_role_arn   = aws_iam_role.ek8s_node_group.arn
-  subnet_ids      = module.vpc.private_subnets
+  subnet_ids      = module.vpc.public_subnets
   labels = {
     aim = "front"
   }
