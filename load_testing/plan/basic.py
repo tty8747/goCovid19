@@ -10,10 +10,10 @@ class Quickstart(HttpUser):
         self.client.request_name = "gocovid_test"
         self.client.get("http://test.app.ubukubu.ru")
 
-    @task
-    def gocovid_prod(self):
-        self.client.request_name = "gocovid_prod"
-        self.client.get("http://app.aaaj.site")
+  # @task
+  # def gocovid_prod(self):
+  #     self.client.request_name = "gocovid_prod"
+  #     self.client.get("http://app.aaaj.site")
 """
     @task
     def google(self):
