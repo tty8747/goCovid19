@@ -3,7 +3,7 @@ resource "aws_db_instance" "this" {
   max_allocated_storage = 12
   engine                = var.db_engine    # MariaDB
   engine_version        = var.db_engineVer # 10.5
-  instance_class        = "db.t2.micro"
+  instance_class        = var.db_instance_class
   db_name               = var.db_name
   username              = var.db_user
   password              = var.db_pass

@@ -9,5 +9,6 @@ variable "db_subnet_list" {}
 variable "available_from_subnets" {
   description = "It is a list of subnets where database is available"
 }
+variable "db_instance_class" {}
 variable "vpc_id" {}
 variable "environment" {}

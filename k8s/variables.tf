@@ -81,6 +81,11 @@ variable "db_environment" {
   default = "dev"
 }
 
+variable "db_instance_class" {
+  type    = string
+  default = "db.m6g.large"
+}
+
 variable "environments" {
   type    = list(string)
   default = ["test", "dev", "release"]

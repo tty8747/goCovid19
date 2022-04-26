@@ -6,6 +6,7 @@ module "db" {
   db_user                = var.db_user
   db_pass                = var.db_pass
   environment            = var.db_environment
+  db_instance_class      = var.db_instance_class
   av_zone                = join("", [var.region, "b"])
   vpc_cidrs              = [module.vpc.vpc_cidr_block]
   db_subnet_list         = module.vpc.private_subnets
