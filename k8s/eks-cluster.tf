@@ -57,7 +57,7 @@ resource "aws_cloudwatch_log_group" "ek8s" {
 }
 
 # https://github.com/aws-observability/aws-otel-helm-charts/tree/main/charts/adot-exporter-for-eks-on-ec2#prerequisites
-# resource "aws_iam_role_policy_attachment" "ek8s-CloudWatchAgentServerPolicy" {
-#   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-#   role       = aws_iam_role.ek8s_cluster.name
-# }
+resource "aws_iam_role_policy_attachment" "ek8s-CloudWatchAgentServerPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  role       = aws_iam_role.ek8s_cluster.name
+}
