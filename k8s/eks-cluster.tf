@@ -61,3 +61,8 @@ resource "aws_iam_role_policy_attachment" "ek8s-CloudWatchAgentServerPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
   role       = aws_iam_role.ek8s_cluster.name
 }
+
+resource "aws_iam_role_policy_attachment" "ek8s-AmazonPrometheusRemoteWriteAccess" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"
+  role       = aws_iam_role.ek8s_cluster.name
+}
