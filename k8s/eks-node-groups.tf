@@ -30,6 +30,19 @@ resource "aws_iam_role_policy_attachment" "ek8s-AmazonEC2ContainerRegistryReadOn
   role       = aws_iam_role.ek8s_node_group.name
 }
 
+# https://github.com/aws-observability/aws-otel-helm-charts/tree/main/charts/adot-exporter-for-eks-on-ec2#prerequisites
+resource "aws_iam_role_policy_attachment" "ek8s-CloudWatchAgentServerPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  role       = aws_iam_role.ek8s_node_group.name
+}
+
+# if Amazon Managed Service for Prometheus will be used
+resource "aws_iam_role_policy_attachment" "ek8s-AmazonPrometheusRemoteWriteAccess" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"
+  role       = aws_iam_role.ek8s_node_group.name
+}
+
+
 # Node groups
 resource "aws_eks_node_group" "ek8s-api" {
   cluster_name    = aws_eks_cluster.ek8s.name
