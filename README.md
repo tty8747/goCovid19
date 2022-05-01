@@ -1,3 +1,4 @@
+[![pipeline status](https://gitlab.ubukubu.ru/goto/goCovid19/badges/develop/pipeline.svg)](https://gitlab.ubukubu.ru/goto/goCovid19/-/commits/develop)
 ## goCovid19
 
 Plan:
