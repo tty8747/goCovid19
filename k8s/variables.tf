@@ -76,7 +76,7 @@ variable "db_pass" {
   default = "somepass"
 }
 
-variable "db_environment" {
+variable "environment" {
   type    = string
   default = "dev"
 }

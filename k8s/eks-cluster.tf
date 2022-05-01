@@ -46,6 +46,10 @@ resource "aws_eks_cluster" "ek8s" {
     aws_iam_role_policy_attachment.ek8s-AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.ek8s-AmazonEKSVPCResourceController,
   ]
+
+  tags = {
+    Environment = var.environment
+  }
 }
 
 # EKS logs
