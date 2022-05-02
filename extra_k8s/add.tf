@@ -1,6 +1,6 @@
 # Amazon load balancer controller
 resource "helm_release" "aws-load-balancer-controller" {
-  name  = "aws-load-balancer-controller"
+  name = "aws-load-balancer-controller"
 
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
@@ -54,6 +54,23 @@ resource "helm_release" "aws-load-balancer-controller" {
 #   }
 # }
 
+# --- kubernetes
+
+resource "kubernetes_service_account" "aws_load_balancer_controller" {
+  metadata {
+    name      = "aws-load-balancer-controller"
+    namespace = "kube-system"
+    labels = {
+      "app.kubernetes.io/component" = "controller"
+      "app.kubernetes.io/name"      = "aws-load-balancer-controller"
+    }
+    annotations = {
+      "eks.amazonaws.com/role-arn"               = data.aws_iam_role.AmazonEKSLoadBalancerControllerRole.arn
+      "eks.amazonaws.com/sts-regional-endpoints" = "true"
+    }
+  }
+}
+
 # --- kubectl
 
 # autoscalling
@@ -86,19 +103,20 @@ resource "kubectl_manifest" "metrics-server" {
   yaml_body = each.value
 }
 
-# --- kubernetes
+# AWS Distro for OpenTelemetry to send into CloudWatch
+# https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-EKS-otel.html
+data "kubectl_file_documents" "otel-container-insights" {
+  content = file("otel-container-insights-infra.yml")
+}
 
-resource "kubernetes_service_account" "aws_load_balancer_controller" {
-  metadata {
-    name      = "aws-load-balancer-controller"
-    namespace = "kube-system"
-    labels = {
-      "app.kubernetes.io/component" = "controller"
-      "app.kubernetes.io/name"      = "aws-load-balancer-controller"
-    }
-    annotations = {
-      "eks.amazonaws.com/role-arn"               = data.aws_iam_role.AmazonEKSLoadBalancerControllerRole.arn
-      "eks.amazonaws.com/sts-regional-endpoints" = "true"
-    }
-  }
+resource "kubectl_manifest" "otel-container-insights" {
+  for_each  = data.kubectl_file_documents.otel-container-insights.manifests
+  yaml_body = each.value
+}
+
+# Set up Fluent Bit as a DaemonSet to send logs to CloudWatch Logs
+# https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html
+
+resource "kubectl_manifest" "cloudwatch-namespace" {
+  yaml_body = file("cloudwatch-namespace.yml")
 }
