@@ -103,7 +103,7 @@ resource "kubectl_manifest" "metrics-server" {
   yaml_body = each.value
 }
 
-# AWS Distro for OpenTelemetry to send into CloudWatch
+# AWS Distro for OpenTelemetry to send metrics into CloudWatch
 # https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-EKS-otel.html
 data "kubectl_file_documents" "otel-container-insights" {
   content = file("otel-container-insights-infra.yml")
@@ -116,7 +116,24 @@ resource "kubectl_manifest" "otel-container-insights" {
 
 # Set up Fluent Bit as a DaemonSet to send logs to CloudWatch Logs
 # https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html
-
 resource "kubectl_manifest" "cloudwatch-namespace" {
   yaml_body = file("cloudwatch-namespace.yml")
+}
+
+resource "kubectl_manifest" "fluent-bit-configmap" {
+  yaml_body = templatefile("${path.module}/fluent-bit-configmap.yml.tftpl",
+    {
+      cluster_name = data.aws_eks_cluster.ek8s.name
+      region       = var.region
+    }
+  )
+}
+
+data "kubectl_file_documents" "fluent-bit" {
+  content = file("fluent-bit.yml")
+}
+
+resource "kubectl_manifest" "fluent-bit" {
+  for_each  = data.kubectl_file_documents.fluent-bit.manifests
+  yaml_body = each.value
 }
