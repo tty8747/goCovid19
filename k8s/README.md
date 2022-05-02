@@ -62,3 +62,10 @@ ssh-keygen -t rsa -b 2048 # if you haven't it
 terraform plan
 terraform apply --auto-approve
 ```
+
+## Infracost
+[How to use it](https://www.infracost.io/docs/)
+
+```bash
+infracost breakdown --path . --terraform-parse-hcl --format html --out-file infracost-infra.html --show-skipped
+```

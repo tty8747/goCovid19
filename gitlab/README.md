@@ -69,3 +69,10 @@ docker run --rm -it -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitla
 ```bash
 docker run --rm -it -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner unregister --all-runners
 ```
+## Infracost
+
+[How to use it](https://www.infracost.io/docs/)
+
+```bash
+infracost breakdown --path . --terraform-parse-hcl --format html --out-file infracost-run.html --show-skipped
+```
