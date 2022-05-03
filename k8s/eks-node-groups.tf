@@ -54,7 +54,7 @@ resource "aws_eks_node_group" "ek8s-api" {
   }
 
   # ubuntu ami types -> https://cloud-images.ubuntu.com/aws-eks/
-  ami_type = "BOTTLEROCKET_x86_64"
+  # ami_type = "BOTTLEROCKET_x86_64"
   # t2.micro - free tier
   # instance_types = ["t2.micro"]
 
@@ -92,7 +92,7 @@ resource "aws_eks_node_group" "ek8s-front" {
   }
 
   # ubuntu ami types -> https://cloud-images.ubuntu.com/aws-eks/
-  ami_type = "BOTTLEROCKET_x86_64"
+  # ami_type = "BOTTLEROCKET_x86_64"
   # t2.micro - free tier
   # instance_types = ["t2.micro"]
 
