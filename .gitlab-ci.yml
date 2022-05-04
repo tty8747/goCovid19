@@ -1,4 +1,4 @@
-image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+image: registry.gitlab.com/gitlab-org/terraform-images/releases/terraform:1.1.9
 
 # https://docs.gitlab.com/ee/user/infrastructure/iac/terraform_state.html#configure-the-backend
 variables:
@@ -134,14 +134,19 @@ tflint:
   script:
     - cp ${TFLINT_CONF} .tflint.hcl
     - tflint --init
-    - tflint -f junit > report.xml
+    - tflint -f junit > report.xml || printf ""
+    - tflint -f json > report.json || printf ""
+    - tflint -f default
   needs:
     - terraform init
   allow_failure: true
   artifacts:
+    expire_in: 1 week
+    paths:
+      - ${TF_ROOT}/report.json
+    # https://docs.gitlab.com/ee/ci/yaml/artifacts_reports.html
     reports:
       junit: ${TF_ROOT}/report.xml
-
 
 .base terraform build:
   stage: build
@@ -150,10 +155,13 @@ tflint:
   script:
     - gitlab-terraform plan
     - gitlab-terraform plan-json
+    - gitlab-terraform plan -out plan.cache
+    - gitlab-terraform show -json plan.cache > plan.json
   artifacts:
     name: plan
     paths:
       - ${TF_ROOT}/plan.cache
+      - ${TF_ROOT}/plan.json
     reports:
       terraform: ${TF_ROOT}/plan.json
   needs:
@@ -185,6 +193,24 @@ prod terraform build:
   only:
     - terraform-ci
 
+
+# https://gitlab.com/infracost/infracost-gitlab-ci
+# https://www.infracost.io/docs/
+infracost:
+  stage: build
+  image:
+    name: infracost/infracost:ci-0.9
+    entrypoint: [""]
+  before_script:
+    *before-k8s
+  needs:
+    - test terraform build
+  dependencies:
+    - test terraform build
+  script:
+    - infracost breakdown --path . --terraform-parse-hcl --format table --show-skipped
+  variables:
+    *test-variables
 
 .base terraform apply:
   stage: apply
