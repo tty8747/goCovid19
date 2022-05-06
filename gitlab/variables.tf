@@ -36,3 +36,8 @@ variable "opened_ports" {
   type    = list(string)
   default = ["22", "443", "80", "8822"]
 }
+
+variable "instance_type" {
+  type    = string
+  default = "c5a.large"
+}
