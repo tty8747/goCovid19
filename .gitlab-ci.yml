@@ -209,6 +209,8 @@ infracost:
     - infracost breakdown --path . --terraform-parse-hcl --format table --show-skipped
   variables:
     *test-variables
+  only:
+    - develop
 
 .base terraform apply:
   stage: apply
