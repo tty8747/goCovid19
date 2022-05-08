@@ -1,3 +1,5 @@
+It's a part of [goCovid19](https://github.com/tty8747/goCovid19-app.git)
+
 ## goCovid19
 
 Plan:
