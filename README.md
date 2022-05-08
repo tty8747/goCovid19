@@ -1,5 +1,8 @@
-[![pipeline status](https://gitlab.ubukubu.ru/goto/goCovid19/badges/develop/pipeline.svg)](https://gitlab.ubukubu.ru/goto/goCovid19/-/commits/develop)
+It's a part of [goCovid19](https://github.com/tty8747/goCovid19-app.git)
+
 ## goCovid19
+
+[![pipeline status](https://gitlab.ubukubu.ru/goto/goCovid19/badges/develop/pipeline.svg)](https://gitlab.ubukubu.ru/goto/goCovid19/-/commits/develop)
 
 Plan:
 
