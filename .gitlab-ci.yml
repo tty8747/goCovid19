@@ -188,6 +188,9 @@ prod terraform build:
   environment:
     name: ${ENV_PROD}
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
+  only:
+    - develop
+    - main
   # auto_stop_in: 4 week
   # on_stop: prod terraform destroy
 
@@ -338,8 +341,9 @@ extra prod terraform build:
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   # auto_stop_in: 4 week
   # on_stop: extra prod terraform destroy
-  rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+  only:
+    - develop
+    - main
   needs:
     - prod terraform apply
     - extra terraform validate
@@ -378,8 +382,8 @@ extra prod terraform apply:
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   # auto_stop_in: 4 week
   # on_stop: extra prod terraform destroy
-  rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+  only:
+    - main
   variables:
     *prod-variables-extra
   dependencies:
@@ -418,7 +422,7 @@ extra prod terraform destroy:
   variables:
     *prod-variables-extra
   rules:
-    - if: '$PHASE == "destroy" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$PHASE == "destroy" && $CI_COMMIT_REF_NAME == "main"'
       when: manual
   needs:
     - extra prod terraform apply
@@ -455,7 +459,7 @@ prod terraform destroy:
   variables:
     *prod-variables
   rules:
-    - if: '$PHASE == "destroy" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$PHASE == "destroy" && $CI_COMMIT_REF_NAME == "main"'
       when: manual
   needs:
     - extra prod terraform destroy
