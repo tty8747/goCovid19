@@ -1,0 +1,34 @@
+[1mProject:[0m tty8747/goCovid19/gitlab
+
+ [4mName[0m                                                    [4mMonthly Qty[0m  [4mUnit[0m            [4mMonthly Cost[0m 
+                                                                                                   
+ [1maws_efs_file_system.gitlab[0m                                                                        
+ [2m└─[0m Storage (standard)                                 Monthly cost depends on usage: $0.36 per GB 
+                                                                                                   
+ [1maws_instance.gitlab[0m                                                                               
+ [2m├─[0m Instance usage (Linux/UNIX, on-demand, t2.xlarge)            730  hours                $156.51 
+ [2m└─[0m root_block_device                                                                              
+ [2m   └─[0m Storage (general purpose SSD, gp3)                         32  GB                     $3.05 
+                                                                                                   
+ [1maws_route53_zone.private[0m                                                                          
+ [2m└─[0m Hosted zone                                                    1  months                 $0.50 
+                                                                                                   
+[1m OVERALL TOTAL[0m                                                                             $160.06 
+──────────────────────────────────
+21 cloud resources were detected:
+∙ 3 were estimated, 2 of which include usage-based costs, see [4mhttps://infracost.io/usage-file[0m
+∙ 17 were free:
+  ∙ 5 x aws_security_group_rule
+  ∙ 2 x aws_security_group
+  ∙ 1 x aws_default_route_table
+  ∙ 1 x aws_efs_access_point
+  ∙ 1 x aws_efs_mount_target
+  ∙ 1 x aws_eip
+  ∙ 1 x aws_eip_association
+  ∙ 1 x aws_internet_gateway
+  ∙ 1 x aws_key_pair
+  ∙ 1 x aws_network_interface
+  ∙ 1 x aws_subnet
+  ∙ 1 x aws_vpc
+∙ 1 is not supported yet, see [4mhttps://infracost.io/requested-resources[0m:
+  ∙ 1 x aws_efs_backup_policy

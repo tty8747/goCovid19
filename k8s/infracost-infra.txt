@@ -1,0 +1,53 @@
+[1mProject:[0m tty8747/goCovid19/k8s
+
+ [4mName[0m                                                          [4mMonthly Qty[0m  [4mUnit[0m              [4mMonthly Cost[0m 
+                                                                                                           
+ [1maws_cloudwatch_log_group.ek8s[0m                                                                             
+ [2m├─[0m Data ingested                                           Monthly cost depends on usage: $0.50 per GB    
+ [2m├─[0m Archival Storage                                        Monthly cost depends on usage: $0.03 per GB    
+ [2m└─[0m Insights queries data scanned                           Monthly cost depends on usage: $0.005 per GB   
+                                                                                                           
+ [1maws_eks_cluster.ek8s[0m                                                                                      
+ [2m└─[0m EKS cluster                                                        730  hours                   $73.00 
+                                                                                                           
+ [1maws_eks_node_group.ek8s-api[0m                                                                               
+ [2m├─[0m Instance usage (Linux/UNIX, on-demand, t3.medium)                  730  hours                   $30.37 
+ [2m└─[0m Storage (general purpose SSD, gp2)                                  20  GB                       $2.00 
+                                                                                                           
+ [1maws_eks_node_group.ek8s-front[0m                                                                             
+ [2m├─[0m Instance usage (Linux/UNIX, on-demand, t3.medium)                  730  hours                   $30.37 
+ [2m└─[0m Storage (general purpose SSD, gp2)                                  20  GB                       $2.00 
+                                                                                                           
+ [1maws_lb.ek8s[0m                                                                                               
+ [2m├─[0m Application load balancer                                          730  hours                   $16.43 
+ [2m└─[0m Load balancer capacity units                            Monthly cost depends on usage: $5.84 per LCU   
+                                                                                                           
+ [1mmodule.db.aws_db_instance.this[0m                                                                            
+ [2m├─[0m Database instance (on-demand, Single-AZ, db.m6g.large)             730  hours                  $131.40 
+ [2m└─[0m Storage (general purpose SSD, gp2)                                   5  GB                       $0.69 
+                                                                                                           
+ [1mmodule.vpc.aws_nat_gateway.this[0][0m                                                                        
+ [2m├─[0m NAT gateway                                                        730  hours                   $37.96 
+ [2m└─[0m Data processed                                          Monthly cost depends on usage: $0.052 per GB   
+                                                                                                           
+[1m OVERALL TOTAL[0m                                                                                     $324.21 
+──────────────────────────────────
+51 cloud resources were detected:
+∙ 7 were estimated, 6 of which include usage-based costs, see [4mhttps://infracost.io/usage-file[0m
+∙ 41 were free:
+  ∙ 9 x aws_iam_role_policy_attachment
+  ∙ 6 x aws_route_table_association
+  ∙ 6 x aws_subnet
+  ∙ 4 x aws_iam_role
+  ∙ 4 x aws_security_group
+  ∙ 2 x aws_iam_policy
+  ∙ 2 x aws_route
+  ∙ 2 x aws_route_table
+  ∙ 1 x aws_acm_certificate
+  ∙ 1 x aws_db_subnet_group
+  ∙ 1 x aws_eip
+  ∙ 1 x aws_iam_openid_connect_provider
+  ∙ 1 x aws_internet_gateway
+  ∙ 1 x aws_vpc
+∙ 3 are not supported yet, see [4mhttps://infracost.io/requested-resources[0m:
+  ∙ 3 x aws_eks_addon
