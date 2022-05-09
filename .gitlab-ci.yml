@@ -245,10 +245,7 @@ prod terraform apply:
   # auto_stop_in: 4 week
   # on_stop: prod terraform destroy
   only:
-    refs:
-      - merge_requests
-    variables:
-      - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+    - main
   variables:
     *prod-variables
   dependencies:
