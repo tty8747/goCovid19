@@ -11,8 +11,6 @@ variables:
   TF_VAR_cloudflare_email: ${TF_VAR_cloudflare_email}
   PHASE: "destroy"
   TF_VAR_db_instance_class: db.t2.micro
-  ENV_TEST: test
-  ENV_PROD: prod
 
 cache:
   key: ${TF_ROOT}-cache
@@ -62,36 +60,40 @@ stages:
     # }
     
 .test-variables: &test-variables
-  TF_STATE_NAME: ${ENV_TEST}-state
+  ENVIRONMENT: test
+  TF_STATE_NAME: ${ENVIRONMENT}-state
   TF_VAR_k8s_name: ${K8S_NAME_TEST}
   TF_VAR_cname_record: ${CNAME_RECORD_TEST}
   TF_VAR_db_name: ${DB_NAME_TEST}
   TF_VAR_db_user: ${DB_USER_TEST}
   TF_VAR_db_pass: ${DB_PASS_TEST}
-  TF_VAR_environment: ${ENV_TEST}
+  TF_VAR_environment: ${ENVIRONMENT}
   TF_VAR_domain: ${DOMAIN_NAME_TEST}
   TF_VAR_region: ${AWS_REGION_TEST}
   TF_VAR_enable_ecr: ${ENABLE_ECR_BOOL_TEST}
  
 .prod-variables: &prod-variables
-  TF_STATE_NAME: ${ENV_PROD}-state
+  ENVIRONMENT: prod
+  TF_STATE_NAME: ${ENVIRONMENT}-state
   TF_VAR_k8s_name: ${K8S_NAME_PROD}
   TF_VAR_cname_record: ${CNAME_RECORD_PROD}
   TF_VAR_db_name: ${DB_NAME_PROD}
   TF_VAR_db_user: ${DB_USER_PROD}
   TF_VAR_db_pass: ${DB_PASS_PROD}
-  TF_VAR_environment: ${ENV_PROD}
+  TF_VAR_environment: ${ENVIRONMENT}
   TF_VAR_domain: ${DOMAIN_NAME_PROD}
   TF_VAR_region: ${AWS_REGION_PROD}
   TF_VAR_enable_ecr: ${ENABLE_ECR_BOOL_PROD}
 
 .test-variables-extra: &test-variables-extra
-  TF_STATE_NAME: ${ENV_TEST}-state-extra
+  ENVIRONMENT: test
+  TF_STATE_NAME: ${ENVIRONMENT}-state-extra
   TF_VAR_region: ${AWS_REGION_TEST}
   TF_VAR_k8s_name: ${K8S_NAME_TEST}
  
 .prod-variables-extra: &prod-variables-extra
-  TF_STATE_NAME: ${ENV_PROD}-state-extra
+  ENVIRONMENT: prod
+  TF_STATE_NAME: ${ENVIRONMENT}-state-extra
   TF_VAR_region: ${AWS_REGION_PROD}
   TF_VAR_k8s_name: ${K8S_NAME_PROD}
 
@@ -173,7 +175,7 @@ test terraform build:
   variables:
     *test-variables
   environment:
-    name: ${ENV_TEST}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
   # auto_stop_in: 1 week
   # on_stop: test terraform destroy
@@ -186,7 +188,7 @@ prod terraform build:
   variables:
     *prod-variables
   environment:
-    name: ${ENV_PROD}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   only:
     - main
@@ -225,7 +227,7 @@ infracost:
 test terraform apply:
   extends: .base terraform apply
   environment:
-    name: ${ENV_TEST}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
   # auto_stop_in: 1 week
   # on_stop: test terraform destroy
@@ -242,7 +244,7 @@ test terraform apply:
 prod terraform apply:
   extends: .base terraform apply
   environment:
-    name: ${ENV_PROD}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   # auto_stop_in: 4 week
   # on_stop: prod terraform destroy
@@ -319,7 +321,7 @@ extra test terraform build:
   variables:
     *test-variables-extra
   environment:
-    name: ${ENV_TEST}
+    name: ${ENVIRONMENT}
     url: ${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
   # auto_stop_in: 1 week
   # on_stop: extra test terraform destroy
@@ -336,7 +338,7 @@ extra prod terraform build:
   variables:
     *prod-variables-extra
   environment:
-    name: ${ENV_PROD}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   # auto_stop_in: 4 week
   # on_stop: extra prod terraform destroy
@@ -359,7 +361,7 @@ extra prod terraform build:
 extra test terraform apply:
   extends: .extra base terraform apply
   environment:
-    name: ${ENV_TEST}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
   # auto_stop_in: 1 week
   # on_stop: extra test terraform destroy
@@ -376,7 +378,7 @@ extra test terraform apply:
 extra prod terraform apply:
   extends: .extra base terraform apply
   environment:
-    name: ${ENV_PROD}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   # auto_stop_in: 4 week
   # on_stop: extra prod terraform destroy
@@ -400,7 +402,7 @@ extra prod terraform apply:
 extra test terraform destroy:
   extends: .extra base terraform destroy
   environment:
-    name: ${ENV_TEST}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
   # action: stop
   variables:
@@ -414,7 +416,7 @@ extra test terraform destroy:
 extra prod terraform destroy:
   extends: .extra base terraform destroy
   environment:
-    name: ${ENV_PROD}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   # action: stop
   variables:
@@ -437,7 +439,7 @@ extra prod terraform destroy:
 test terraform destroy:
   extends: .base terraform destroy
   environment:
-    name: ${ENV_TEST}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_TEST}.${DOMAIN_NAME_TEST}
   # action: stop
   variables:
@@ -451,7 +453,7 @@ test terraform destroy:
 prod terraform destroy:
   extends: .base terraform destroy
   environment:
-    name: ${ENV_PROD}
+    name: ${ENVIRONMENT}
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   # action: stop
   variables:
