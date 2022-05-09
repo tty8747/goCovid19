@@ -244,8 +244,8 @@ prod terraform apply:
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   # auto_stop_in: 4 week
   # on_stop: prod terraform destroy
-  rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+  only:
+    - main
   variables:
     *prod-variables
   dependencies:
