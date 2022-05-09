@@ -189,7 +189,6 @@ prod terraform build:
     name: ${ENV_PROD}
     url: http://${CNAME_RECORD_PROD}.${DOMAIN_NAME_PROD}
   only:
-    - develop
     - main
   # auto_stop_in: 4 week
   # on_stop: prod terraform destroy
@@ -342,7 +341,6 @@ extra prod terraform build:
   # auto_stop_in: 4 week
   # on_stop: extra prod terraform destroy
   only:
-    - develop
     - main
   needs:
     - prod terraform apply
