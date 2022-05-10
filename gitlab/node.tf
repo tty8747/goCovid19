@@ -51,7 +51,8 @@ resource "aws_instance" "gitlab" {
 
   root_block_device {
     volume_size = "32"
-    volume_type = "gp3"
+    volume_type = "io2"
+    iops        = "600"
   }
 
   network_interface {
