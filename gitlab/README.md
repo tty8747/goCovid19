@@ -69,6 +69,20 @@ docker run --rm -it -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitla
 ```bash
 docker run --rm -it -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner unregister --all-runners
 ```
+
+## Gitlab issues
+```
+gitlab-rails console
+
+# https://gitlab.com/gitlab-org/gitlab-foss/-/issues/45818
+Feature.disable(:gitaly_list_commits_by_oid)
+Feature.enabled?(:gitaly_list_commits_by_oid)
+
+# https://gitlab.com/gitlab-org/gitlab/-/issues/329895
+Feature.disable(:graphql_pipeline_details)
+Feature.enabled?(:graphql_pipeline_details)
+```
+
 ## Infracost
 
 [How to use it](https://www.infracost.io/docs/)

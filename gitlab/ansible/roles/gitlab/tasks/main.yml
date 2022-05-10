@@ -41,7 +41,7 @@
       - "{{ gitlab_home }}/logs:/var/log/gitlab:rw"
       - "{{ gitlab_home }}/data:/var/opt/gitlab:rw"
     env:
-      GITLAB_OMNIBUS_CONFIG: "external_url 'https://{{ domain_name }}/'; manage_storage_directories['manage_etc'] = false; manage_storage_directories['enable'] = false;"
+      GITLAB_OMNIBUS_CONFIG: "external_url 'https://{{ domain_name }}/'; manage_storage_directories['manage_etc'] = false; manage_storage_directories['enable'] = false; prometheus_monitoring['enable'] = false;"
   become: yes
   when: not remove_gitlab_data | bool
 
