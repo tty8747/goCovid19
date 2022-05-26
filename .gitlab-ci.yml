@@ -155,10 +155,13 @@ tflint:
   before_script:
     *before-k8s
   script:
+    - ls -ahl
     - gitlab-terraform plan
     - gitlab-terraform plan-json
+    - ls -ahl
     - gitlab-terraform plan -out plan.cache
     - gitlab-terraform show -json plan.cache > plan.json
+    - ls -ahl
   artifacts:
     name: plan
     paths:
@@ -306,9 +309,11 @@ tflint extra:
   before_script:
     *before-k8s-extra
   script:
+    - ls -ahl
     - gitlab-terraform validate
     - gitlab-terraform plan
     - gitlab-terraform plan-json
+    - ls -ahl
   artifacts:
     name: extra-plan
     paths:
