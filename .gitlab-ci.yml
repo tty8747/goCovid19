@@ -112,7 +112,9 @@ terraform init:
   before_script:
     *before-k8s
   script:
+    - ls -ahl
     - gitlab-terraform init
+    - ls -ahl
 
 terraform validate:
   stage: validate
@@ -267,7 +269,9 @@ extra terraform init:
   before_script:
     *before-k8s-extra
   script:
+    - ls -ahl
     - gitlab-terraform init
+    - ls -ahl
 
 extra terraform validate:
   stage: extra-validate
