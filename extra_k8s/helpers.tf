@@ -3,7 +3,8 @@ data "aws_eks_cluster_auth" "ek8s" {
 }
 
 data "aws_eks_cluster" "ek8s" {
-  name = [for i in data.aws_eks_clusters.cluster_list.names : i if substr(i, 0, length(i) - 3) == "eks-${var.k8s_name}"].0
+  name = var.k8s_name
+  # name = [for i in data.aws_eks_clusters.cluster_list.names : i if substr(i, 0, length(i) - 3) == "eks-${var.k8s_name}"].0
   # name = [for i in data.aws_eks_clusters.cluster_list.names : i if substr("eks-dev-8q", 0, length("eks-dev-8q")-3) == "eks-dev"].0
 }
 
