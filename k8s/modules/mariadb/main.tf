@@ -12,7 +12,8 @@ resource "aws_db_instance" "this" {
   availability_zone      = var.av_zone
   vpc_security_group_ids = [aws_security_group.this.id]
   db_subnet_group_name   = aws_db_subnet_group.this.id
-  identifier_prefix      = "${var.db_name}-${var.environment}-"
+  # identifier_prefix      = "${var.db_name}-${var.environment}-"
+  identifier = "${var.db_name}-${var.environment}"
 
   tags = {
     Name        = var.db_name
